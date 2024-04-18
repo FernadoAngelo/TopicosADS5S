@@ -1,0 +1,6 @@
+
+
+npx expo start
+
+
+https://forms.gle/pz5gaiDrS9yuCBTTA 17/04
