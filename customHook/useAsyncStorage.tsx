@@ -1,29 +1,37 @@
-import { useState } from "react"
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const useAsyncStorage =  (key, initialvalue) =>{
-    const [localStorageState, setlocalStorageState] = useState(initialvalue)
-    console.log("sda");
+const useAsyncStorage =  (key, initialValue) =>{
+    const [localStorageState, setlocalStorageState] = React.useState()
+    //console.log("Teste 1")
     
-    const getItem = async () => {
-        const items = await AsyncStorage.getItem(key)
-        if (items != null) {
-            const parsedItem = JSON.parse(items) || []
-            setlocalStorageState(parsedItem)
-          }
+    const getItem = async (key) => {
+        //console.log("Teste 2")
+        try {
+            const items = await AsyncStorage.getItem(key)
+            //console.log(items)
+            if (items != null) {
+                const parsedItem = JSON.parse(items) || []
+                setlocalStorageState(parsedItem)
+            }
+        } catch(error){
+            console.log('Erro:', error)
+        }
     }
 
     React.useEffect(() => {
-        getItem()
-      },[key, initialvalue])
+        getItem(key)
+      },[key])
 
-    const setItem = async (key,arrTodo) => {
-        await AsyncStorage.setItem(key,JSON.stringify(arrTodo))
-        setlocalStorageState(arrTodo)
+    const setItem = async (value) => {
+        try{
+            await AsyncStorage.setItem(key,JSON.stringify(value))
+            setlocalStorageState(value)
+        } catch(error){
+            console.log('Erro:', error)
+        }
     }
 
-
-    return [localStorageState, setItem];
+    return [localStorageState || initialValue, setItem];
 }
 export default useAsyncStorage

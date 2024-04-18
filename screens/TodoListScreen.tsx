@@ -4,15 +4,14 @@ import {
   Text,
   TextInput,
   View,
-  FlatList,
   Pressable,
   TouchableOpacity,
 } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AntDesign } from '@expo/vector-icons'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ToDoStackParamList } from '../navigation/StackNavigator'
 import Modal from '../components/Modal'
+import FlatListTask from '../components/FlatListTask'
 import TodoItemType from '../types/TodoItem'
 import TodoItem from '../components/TodoItem'
 import useAsyncStorage from '../customHook/useAsyncStorage'
@@ -23,11 +22,11 @@ type TodoListScreenProps = NativeStackScreenProps<
   ToDoStackParamList,
   'TodoList'
 >
-const i = []
+
 const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
+  const arrEmpty = []
   const [modalVisible, setModalVisible] = React.useState(false)
-  // const [todoItemList, setTodoItemList] = React.useState<TodoItemType[]>([])
-  const [todoItemList, setTodoItemList] = useAsyncStorage(storageTodoListKey,i)
+  const [todoItemList, setTodoItemList] = useAsyncStorage(storageTodoListKey, arrEmpty)
   const [todoItemDescription, setTodoItemDescription] = React.useState('')
 
   React.useEffect(() => {
@@ -42,13 +41,6 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
       ),
     })
   }, [navigation])
-
-  // React.useEffect(() => {
-  //   const getTodoItems = async () => {
-  //     // await setTodoItemList(useAsyncStorage(storageTodoListKey,[]))
-  //   }
-  //   getTodoItems()
-  // }, [])
 
   const handleAddItem = async () => {
     if (!todoItemDescription) {
@@ -66,7 +58,7 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
       ]
       //await AsyncStorage.setItem(storageTodoListKey, JSON.stringify(arrTodo))
 
-      // setTodoItemList(useAsyncStorage(storageTodoListKey,arrTodo))
+      setTodoItemList(arrTodo)
       setTodoItemDescription('')
       return
     }
@@ -87,7 +79,6 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
       storageTodoListKey,
       JSON.stringify(todoItemListCopy)
     )*/
-    setTodoItemList(useAsyncStorage(storageTodoListKey,todoItemListCopy))
 
     setTodoItemList(todoItemListCopy)
     setTodoItemDescription('')
@@ -100,9 +91,9 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
 
     setTodoItemList(todoItemListCopy)
     //AsyncStorage.setItem(storageTodoListKey, JSON.stringify(todoItemListCopy))
-    setTodoItemList(useAsyncStorage(storageTodoListKey,todoItemListCopy))
-    
   }
+
+ 
 
   return (
     <View style={styles.container}>
@@ -134,16 +125,14 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
       </Modal>
 
       {/* Lista de tarefas salvas */}
-      <FlatList
-        style={{ width: '100%' }}
+      <FlatListTask
         data={todoItemList}
         renderItem={({ item }) => (
           <TodoItem todoItem={item} onDelete={handleDeleteItem} />
         )}
-        keyExtractor={(item, i) => (item.id ?? i).toString()} // Cria key para cada item da lista
-        contentContainerStyle={{ gap: 5, marginTop: 5 }}
-        ListFooterComponent={<View style={{ height: 20 }} />}
-      />
+        keyExtractor={(item, i) => (item.id ?? i).toString()}
+      >
+      </FlatListTask>
     </View>
   )
 }
