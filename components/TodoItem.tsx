@@ -63,6 +63,9 @@ const TodoItem = ({
     >
       <View style={styles.item}>
         <Text style={styles.itemText} numberOfLines={1} selectable>
+          {todoItem.title}
+        </Text>
+        <Text style={styles.itemText} numberOfLines={1} selectable>
           {todoItem.description}
         </Text>
       </View>
@@ -78,6 +81,9 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderRadius: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-evenly'
   },
   itemText: {
     fontSize: 14,
