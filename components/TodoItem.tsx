@@ -10,44 +10,70 @@ import {
 import { Swipeable } from 'react-native-gesture-handler'
 import TodoItemType from '../types/TodoItem'
 
+type RightSwipeProps = {
+  item: TodoItemType
+  onDelete: (item: TodoItemType) => void
+  onUpdate: (item: TodoItemType) => void
+  progress: Animated.AnimatedInterpolation<number>
+}
 
 const RightSwipeActions = ({
   item,
   onDelete,
+  onUpdate,
   progress,
-}: {
-  item: TodoItemType
-  onDelete: (item: TodoItemType) => void
-  progress: Animated.AnimatedInterpolation<number>
-}) => {
+}: RightSwipeProps) => {
   const transform = progress.interpolate({
     inputRange: [0, 1],
     outputRange: [10, 0],
   })
   return (
-    <Animated.View
+    <>
+      <Animated.View
       style={[
         styles.item,
         {
           backgroundColor: 'lightcoral',
           alignItems: 'flex-end',
           transform: [{ translateX: transform }],
-        },
+          marginRight: 5
+        }
       ]}
     >
       <TouchableOpacity onPress={() => onDelete(item)}>
         <AntDesign name="delete" size={18} color="black" />
       </TouchableOpacity>
     </Animated.View>
+
+      <Animated.View
+      style={[
+        styles.item,
+        {
+          backgroundColor: 'lightgreen',
+          alignItems: 'flex-end',
+          transform: [{ translateX: transform }],
+          marginRight: 5,
+          marginLeft: 5,
+        }
+      ]}
+    >
+      <TouchableOpacity onPress={() => onUpdate(item)}>
+        <AntDesign name="edit" size={18} color="black" />
+      </TouchableOpacity>
+    </Animated.View>
+    </>
   )
 }
+
 
 const TodoItem = ({
   todoItem,
   onDelete,
+  onUpdate,
 }: {
   todoItem: TodoItemType
   onDelete: (item: TodoItemType) => void
+  onUpdate: (item: TodoItemType) => void
 }) => {
   return (
     <Swipeable
@@ -57,6 +83,7 @@ const TodoItem = ({
         <RightSwipeActions
           item={todoItem}
           onDelete={onDelete}
+          onUpdate={onUpdate}
           progress={progressAnimatedValue}
         />
       )}
@@ -88,7 +115,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 14,
     fontWeight: 'bold',
-  },
+  }
 })
 
 export default TodoItem

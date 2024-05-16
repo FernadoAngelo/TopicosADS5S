@@ -26,6 +26,8 @@ type TodoListScreenProps = NativeStackScreenProps<
 const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
   const arrEmpty = []
   const [modalVisible, setModalVisible] = React.useState(false)
+  const [editIndex, setEditIndex] = React.useState(-1)
+  const [modalEditVisible, setModalEditVisible] = React.useState(false)
   const [todoItemList, setTodoItemList] = useAsyncStorage(storageTodoListKey, arrEmpty)
   const [todoItemDesc, settodoItemDesc] = React.useState('')
   const [todoItemTitle, settodoItemTitle] = React.useState('')
@@ -42,6 +44,28 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
       ),
     })
   }, [navigation])
+
+  const handleUpdateItem = async () => {
+    if (!todoItemDesc || !todoItemTitle || editIndex === -1) {
+      alert('Um ou mais Campos vazios!')
+      console.log(editIndex)
+      return
+    }
+
+    const newItem: TodoItemType = {
+      id: todoItemList[editIndex].id,
+      title: todoItemTitle,
+      description: todoItemDesc,
+    }
+    console.log(newItem)
+    const todoItemListCopy = [...todoItemList]
+    todoItemListCopy[editIndex] = newItem
+    console.log(todoItemListCopy)
+    setTodoItemList(todoItemListCopy)
+    settodoItemDesc('')
+    settodoItemTitle('')
+    
+  }
 
   const handleAddItem = async () => {
     if (!todoItemDesc || !todoItemTitle) {
@@ -84,7 +108,7 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
 
     setTodoItemList(todoItemListCopy)
     settodoItemDesc('')
-      settodoItemTitle('')
+    settodoItemTitle('')
   }
 
   const handleDeleteItem = (item: TodoItemType) => {
@@ -96,7 +120,11 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
     //AsyncStorage.setItem(storageTodoListKey, JSON.stringify(todoItemListCopy))
   }
 
-
+  const handleModalEdit = (item: TodoItemType) => {
+    const index = todoItemList.findIndex((todo) => todo.id === item.id)
+    setEditIndex(index)
+    setModalEditVisible(true)
+  }
 
   return (
     <View style={styles.container}>
@@ -121,7 +149,7 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
         {/* Input para guardar a descrição */}
         <TextInput
           style={[styles.input, { minHeight: 80 }]}
-          placeholder="Descrição"
+          placeholder="Descrição asdasd"
           value={todoItemDesc}
           onChangeText={(textDesc) => settodoItemDesc(textDesc)}
           multiline={true}
@@ -141,11 +169,46 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
         </View>
       </Modal>
 
+      <Modal
+        modalVisible={modalEditVisible}
+        onCloseModal={() => setModalEditVisible(!modalEditVisible)}
+        title="Descreva a tarefa"
+      >
+        {/* Input para guardar o title */}
+        <TextInput
+          style={[styles.input, { minHeight: 10 }]}
+          placeholder="Título"
+          value={todoItemTitle}
+          onChangeText={(textTitle) => settodoItemTitle(textTitle)}
+          multiline={false}
+          numberOfLines={1}
+        />
+
+        {/* Input para guardar a descrição */}
+        <TextInput
+          style={[styles.input, { minHeight: 80 }]}
+          placeholder="Descrição"
+          value={todoItemDesc}
+          onChangeText={(textDesc) => settodoItemDesc(textDesc)}
+          multiline={true}
+          numberOfLines={4}
+        />
+        {/* Botões da modal */}
+        <View style={{ flexDirection: 'row', gap: 5 }}>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={handleUpdateItem}
+          >
+            <Text style={styles.textStyle}>Editar</Text>
+          </Pressable>
+        </View>
+      </Modal>
+
       {/* Lista de tarefas salvas */}
       <FlatListTask
         data={todoItemList}
         renderItem={({ item }) => (
-          <TodoItem todoItem={item} onDelete={handleDeleteItem} />
+          <TodoItem todoItem={item} onDelete={handleDeleteItem} onUpdate={handleModalEdit} />
         )}
         keyExtractor={(item, i) => (item.id ?? i).toString()}
       >
