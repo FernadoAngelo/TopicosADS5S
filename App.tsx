@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import BottomTabNavigator from './navigation/BottomTabNavigator'
+import BottomTabNavigator from './src/navigation/BottomTabNavigator'
 
 export type RootStackParamList = {
   Home: undefined;
@@ -10,7 +10,7 @@ export type RootStackParamList = {
 export default function App() {
   return (
     <NavigationContainer>
-      <BottomTabNavigator />
+      <BottomTabNavigator/>
     </NavigationContainer>
   );
 }
