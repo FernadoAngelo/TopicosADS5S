@@ -67,9 +67,8 @@ const MainStackNavigator = () => {
 
 export type ToDoStackParamList = {
   TodoList: undefined;
-  Login: {
-    setUserToken: (value: string) => void;
-  }
+  Login: { setUserToken: (v: string) => void; };
+  
 };
 
 const TodoStack = createNativeStackNavigator<ToDoStackParamList>()
@@ -86,30 +85,8 @@ const todoScreenOptionStyle: NativeStackNavigationOptions = {
 }
 
 const ToDoListStackNavigator = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [userToken, setUserToken] = useAsyncStorage<string>('userToken', '');
+  const [userToken, setUserToken] = useAsyncStorage(userLoginTodoListKey, ''); //chave e valor inicial do asyncstorage
 
-  const getUserToken = async () => {
-    // testing purposes
-    const sleep = (ms: number | undefined) => new Promise((r) => setTimeout(r, ms));
-    try {
-      // custom logic
-      await sleep(2000);
-      const token = '';
-      setUserToken(token);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    getUserToken();
-  }, []);
-
-  if (isLoading) {
-    // We haven't finished checking for the token yet
-    return <SplashScreen />;
-  }
 
   return (
     <TodoStack.Navigator screenOptions={todoScreenOptionStyle}>

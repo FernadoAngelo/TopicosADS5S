@@ -4,3 +4,6 @@ npx expo start
 
 
 https://forms.gle/RRE3rE8cA6MZ225q7 15/05
+
+
+https://reactnavigation.org/docs/params/
