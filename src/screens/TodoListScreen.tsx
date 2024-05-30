@@ -16,7 +16,8 @@ import { useAsyncStorage } from '../hooks/useAsyncStorage'
 import TodoItemList from '../components/TodoItemList'
 import { storageTodoListKey, userLoginTodoListKey } from '../utils/constants'
 
-const initialTodoItem: TodoItemType = { id: 1, description: '', title: '' }
+const initialTodoItem: TodoItemType = {description: '', title: '' }
+const baseUrl = `http://localhost:3000`
 
 type TodoListScreenProps = NativeStackScreenProps<
   ToDoStackParamList,
@@ -27,67 +28,95 @@ const TodoListScreen = ({ navigation }: TodoListScreenProps) => {
   const [modalVisible, setModalVisible] = React.useState(false)
   const [isEdit, setIsEdit] = React.useState(false)
   const [todoItem, setTodoItem] = React.useState<TodoItemType>(initialTodoItem)
+  const [lsTodoItem, setLsTodoItem] = React.useState<TodoItemType[]>([])
 
-  const [lsTodoItem, setLsTodoItem] = useAsyncStorage<TodoItemType[]>(
-    storageTodoListKey,
-    []
-  )
+  //const [lsTodoItem, setLsTodoItem] = useAsyncStorage<TodoItemType[]>(
+  //  storageTodoListKey,
+  //  []
+  //)
 
-
-  React.useEffect(() => {
+  
+  React.useEffect(() =>  {
+    navigation.addListener('focus', async () => {
+      const teste = await fetchTaskData()
+      setLsTodoItem(teste)
+      console.log('Testado')
+    })
+    
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          onPress={() => {
+        onPress={() => {
             setIsEdit(false)
             setModalVisible(true)
           }}
           style={{ padding: 15 }}
-        >
+          >
           <AntDesign name="pluscircle" size={24} color="darkseagreen" />
         </TouchableOpacity>
       ),
     })
   }, [navigation])
-
+  
+  // Busca dados da API Docker
+  const fetchTaskData = async () => {
+    
+    try {
+      const response = await fetch(baseUrl+'/tasks')
+      const data = await response.json()
+      console.log(data)
+      return data
+    } catch (error) {
+      console.error(error)
+    } 
+  }
+  
   const handleAddItem = async () => {
     if (!todoItem) {
-      alert('Descrição da tarefa inválida!')
-      return
+     alert('Descrição da tarefa inválida!')
+     return
     }
 
-    if (!lsTodoItem.length) {
-      setLsTodoItem([todoItem])
-      setTodoItem(initialTodoItem)
-      setModalVisible(false)
-      return
+    try {
+      const response = await fetch(baseUrl+'/tasks', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(todoItem),
+      })
+      return response
+    } catch (error) {
+      console.error(error)
     }
+    
+    //if (!lsTodoItem.length) {
+    //  setLsTodoItem([todoItem])
+    //  setTodoItem(initialTodoItem)
+    //  setModalVisible(false)
+    //  return
+    //}
+    //if (isEdit) {
+    //  const index = lsTodoItem.findIndex((todo) => todo.id === todoItem.id)
+    //  const todoItemListCopy = [...lsTodoItem]
+    //  todoItemListCopy[index] = todoItem
+    //  setLsTodoItem(todoItemListCopy)
+    //  setTodoItem(initialTodoItem)
+    //  setModalVisible(false)
+    //  return
+    //}
 
-    if (isEdit) {
-      const index = lsTodoItem.findIndex((todo) => todo.id === todoItem.id)
-      const todoItemListCopy = [...lsTodoItem]
+    //const todoItemListCopy = [...lsTodoItem]
+    //const lastItemIdPlusOne = lsTodoItem[lsTodoItem.length - 1].id + 1
+    //const newItem: TodoItemType = {
+    //  ...todoItem,
+    //  id: lastItemIdPlusOne,
+    //}
 
-      todoItemListCopy[index] = todoItem
-
-      setLsTodoItem(todoItemListCopy)
-      setTodoItem(initialTodoItem)
-      setModalVisible(false)
-      return
-    }
-
-    const todoItemListCopy = [...lsTodoItem]
-
-    const lastItemIdPlusOne = lsTodoItem[lsTodoItem.length - 1].id + 1
-
-    const newItem: TodoItemType = {
-      ...todoItem,
-      id: lastItemIdPlusOne,
-    }
-
-    todoItemListCopy.push(newItem)
-
-    setLsTodoItem(todoItemListCopy)
-    setTodoItem(initialTodoItem)
+    //todoItemListCopy.push(newItem)
+    //setLsTodoItem(todoItemListCopy)
+    //setTodoItem(initialTodoItem)
     setModalVisible(false)
   }
 

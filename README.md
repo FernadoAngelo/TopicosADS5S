@@ -1,11 +1,27 @@
-# Sample Snack app
+npx expo start
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
+https://forms.gle/DdzvkCD2pfmSiemU7 29/05
 
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
+A partir da resolução da atividade da semana passada: 
 
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
+https://snack.expo.dev/@satinp/22-05, ou pelo repositório: https://github.com/satinP/topicos-especiais-app
 
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+Adicionar integração do projeto com uma API de tarefas
+
+[] Integrar o projeto com uma API Local: https://github.com/satinP/express-todo-list
+[] Trocar as operações em que utilizamos AsyncStorage, para operações que fazem chamadas para a API acima. Ex: Salvar utilizando POST, não AsyncStorage.
+[] Remover o id inicial da tarefa, pois a API que irá gerar esse valor
+[] Atualizar o componente TodoItemList para aceitar uma lista de tarefas, e remover o uso do useAsyncStorage.
+[] Realizar uma chamada para /tasks toda vez que a tela for carregada (toda navegação entre tabs)
+
+Links para auxiliar:
+
+* Como executar uma função toda vez que uma tela é focada: https://reactnavigation.org/docs/function-after-focusing-screen/
+
+* Como utilizar fetch para método de GET, POST, PUT, DELETE: https://github.com/TI-UNICESUMAR/2024-topicos-especiais-ads5s/tree/main/2024-05-29-fetch-metodos
+
+* Como instalar docker no windows: https://youtu.be/ZyBBv1JmnWQ
+
+
+https://reactnavigation.org/docs/params/
