@@ -9,10 +9,14 @@ https://snack.expo.dev/@satinp/22-05, ou pelo repositório: https://github.com/s
 
 Adicionar integração do projeto com uma API de tarefas
 
-[] Integrar o projeto com uma API Local: https://github.com/satinP/express-todo-list
+[] Integrar o projeto com uma API Local: https://github.com/satinP/express-todo-list 
+
 [] Trocar as operações em que utilizamos AsyncStorage, para operações que fazem chamadas para a API acima. Ex: Salvar utilizando POST, não AsyncStorage.
+
 [] Remover o id inicial da tarefa, pois a API que irá gerar esse valor
+
 [] Atualizar o componente TodoItemList para aceitar uma lista de tarefas, e remover o uso do useAsyncStorage.
+
 [] Realizar uma chamada para /tasks toda vez que a tela for carregada (toda navegação entre tabs)
 
 Links para auxiliar:
